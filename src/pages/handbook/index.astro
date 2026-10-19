@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+
+const chapters = (await getCollection('handbook')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WhyHireWrong? Handbook</title>
+    <meta
+      name="description"
+      content="How WhyHireWrong? works: our approach to technology recruitment, candidate assessment, client collaboration, and hiring quality."
+    />
+  </head>
+  <body class="min-h-screen bg-white text-neutral-900">
+    <main class="mx-auto max-w-4xl px-5 py-20">
+      <p class="text-sm font-semibold uppercase tracking-wide text-[var(--whw-accent)]">
+        The WhyHireWrong? Handbook
+      </p>
+      <h1 class="mt-4 text-5xl font-extrabold tracking-tight">
+        How we help companies hire better.
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg text-neutral-600">
+        This handbook explains how WhyHireWrong? works. It covers our principles, services,
+        sourcing and assessment methods, client process, candidate experience, and quality
+        standards.
+      </p>
+
+      <div class="mt-12 divide-y divide-neutral-200 border-y border-neutral-200">
+        {
+          chapters.map((chapter) => (
+            <a
+              href={`/handbook/${chapter.id}/`}
+              class="flex items-baseline justify-between gap-6 py-5 hover:bg-neutral-50"
+            >
+              <span class="text-lg font-semibold">{chapter.data.title}</span>
+              <span class="text-sm text-neutral-500">{chapter.data.description}</span>
+            </a>
+          ))
+        }
+      </div>
+    </main>
+  </body>
+</html>

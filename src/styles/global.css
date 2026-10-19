@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --whw-ink: #101418;
+  --whw-muted: #5b6570;
+  --whw-accent: #e2483d;
+  --whw-surface: #f7f7f5;
+}
+
+body {
+  color: var(--whw-ink);
+  background: white;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.prose h1 {
+  font-size: 2.25rem;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.prose h2 {
+  margin-top: 2.5rem;
+  font-size: 1.5rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.prose h3 {
+  margin-top: 1.75rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.prose p,
+.prose li {
+  color: #333b44;
+  line-height: 1.7;
+}
+
+.prose a {
+  color: var(--whw-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--whw-accent);
+  padding: 0.75rem 1rem;
+  background: var(--whw-surface);
+  border-radius: 0 0.5rem 0.5rem 0;
+}

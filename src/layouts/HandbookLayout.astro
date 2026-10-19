@@ -1,0 +1,97 @@
+---
+import '../../styles/global.css';
+import { getCollection, render } from 'astro:content';
+
+const { handbook } = Astro.props;
+const { Content } = await render(handbook);
+
+const chapters = (await getCollection('handbook')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const currentIndex = chapters.findIndex((chapter) => chapter.id === handbook.id);
+const previous = chapters[currentIndex - 1];
+const next = chapters[currentIndex + 1];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{handbook.data.title} | WhyHireWrong? Handbook</title>
+    <meta name="description" content={handbook.data.description} />
+  </head>
+  <body class="min-h-screen bg-white">
+    <header class="sticky top-0 z-20 border-b border-neutral-200 bg-white/90 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+        <a href="/handbook/" class="text-lg font-extrabold tracking-tight">
+          WhyHireWrong<span class="text-[var(--whw-accent)]">?</span>
+          <span class="ml-2 text-sm font-medium text-neutral-500">Handbook</span>
+        </a>
+        <a
+          href="https://github.com/Cranberr/whyhirewrong-handbook"
+          class="rounded-full border border-neutral-300 px-4 py-2 text-sm font-semibold hover:border-neutral-900"
+        >
+          Edit on GitHub
+        </a>
+      </div>
+    </header>
+
+    <div class="mx-auto grid max-w-6xl gap-10 px-5 py-10 lg:grid-cols-[260px_minmax(0,1fr)]">
+      <aside class="hidden lg:block">
+        <nav class="sticky top-24 space-y-1">
+          {
+            chapters.map((chapter) => (
+              <a
+                href={`/handbook/${chapter.id}/`}
+                class:list={[
+                  'block rounded-lg px-3 py-2 text-sm',
+                  chapter.id === handbook.id
+                    ? 'bg-neutral-100 font-semibold text-neutral-900'
+                    : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900',
+                ]}
+              >
+                {chapter.data.title}
+              </a>
+            ))
+          }
+        </nav>
+      </aside>
+
+      <main class="prose max-w-none">
+        <article>
+          <h1>{handbook.data.title}</h1>
+          <p class="text-neutral-500">{handbook.data.description}</p>
+          <Content />
+        </article>
+
+        <div class="mt-12 flex justify-between gap-4 border-t border-neutral-200 pt-6 text-sm">
+          {
+            previous ? (
+              <a href={`/handbook/${previous.id}/`} class="font-semibold">
+                ← {previous.data.title}
+              </a>
+            ) : (
+              <span />
+            )
+          }
+          {
+            next ? (
+              <a href={`/handbook/${next.id}/`} class="font-semibold">
+                {next.data.title} →
+              </a>
+            ) : (
+              <span />
+            )
+          }
+        </div>
+
+        <p class="mt-6 text-xs text-neutral-500">
+          Last updated: {handbook.data.updated.toLocaleDateString('en-GB')} · Owner:{' '}
+          {handbook.data.owner}
+        </p>
+      </main>
+    </div>
+  </body>
+</html>

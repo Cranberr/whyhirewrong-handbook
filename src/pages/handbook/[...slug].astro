@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import HandbookLayout from '../../layouts/HandbookLayout.astro';
+
+export async function getStaticPaths() {
+  const chapters = await getCollection('handbook');
+  return chapters.map((chapter) => ({
+    params: { slug: chapter.id },
+    props: { handbook: chapter },
+  }));
+}
+
+const { handbook } = Astro.props;
+---
+
+<HandbookLayout handbook={handbook} />
