@@ -1,4 +1,3 @@
----
 import { useEffect, useRef, useState } from 'react';
 
 export default function HandbookSearch() {
@@ -6,26 +5,41 @@ export default function HandbookSearch() {
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   const inputRef = useRef(null);
   const dialogRef = useRef(null);
+  const searchIdRef = useRef(0);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadPagefind() {
       if (window.pagefind) return;
+
       try {
         window.pagefind = await import(/* @vite-ignore */ '/pagefind/pagefind.js');
         await window.pagefind.options({
           baseUrl: '/handbook/',
         });
-      } catch (error) {
-        console.warn('Handbook search index is unavailable.', error);
+      } catch (err) {
+        if (!cancelled) {
+          console.warn('Handbook search index is unavailable.', err);
+          setError(true);
+        }
       }
     }
 
     loadPagefind();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
+    if (!open) return;
+
     function onKeyDown(event) {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
@@ -38,38 +52,59 @@ export default function HandbookSearch() {
       }
     }
 
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-
     function onClickOutside(event) {
       if (dialogRef.current && !dialogRef.current.contains(event.target)) {
         setOpen(false);
       }
     }
 
+    document.addEventListener('keydown', onKeyDown);
     document.addEventListener('mousedown', onClickOutside);
-    return () => document.removeEventListener('mousedown', onClickOutside);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('mousedown', onClickOutside);
+    };
   }, [open]);
 
   async function search(value) {
-    setQuery(value);
+    const nextQuery = value;
+    const searchId = ++searchIdRef.current;
 
-    if (!value.trim() || !window.pagefind) {
+    setQuery(nextQuery);
+
+    if (!nextQuery.trim() || !window.pagefind) {
       setResults([]);
+      setLoading(false);
       return;
     }
 
     setLoading(true);
-    const search = await window.pagefind.search(value);
-    const loaded = await Promise.all(
-      search.results.slice(0, 8).map((result) => result.data())
-    );
-    setResults(loaded);
-    setLoading(false);
+
+    try {
+      const response = await window.pagefind.search(nextQuery);
+
+      if (searchId !== searchIdRef.current) return;
+
+      const loaded = await Promise.all(
+        response.results.slice(0, 8).map((result) => result.data())
+      );
+
+      if (searchId !== searchIdRef.current) return;
+
+      setResults(loaded);
+      setError(false);
+    } catch (err) {
+      if (searchId === searchIdRef.current) {
+        console.error('Handbook search failed.', err);
+        setResults([]);
+        setError(true);
+      }
+    } finally {
+      if (searchId === searchIdRef.current) {
+        setLoading(false);
+      }
+    }
   }
 
   return (
@@ -113,21 +148,27 @@ export default function HandbookSearch() {
                 <p className="px-5 py-4 text-sm text-neutral-500">Searching…</p>
               )}
 
-              {!loading && query && results.length === 0 && (
+              {error && !loading && (
+                <p className="px-5 py-4 text-sm text-neutral-500">
+                  Search is unavailable. Run <code>npm run build</code> to generate the Pagefind index.
+                </p>
+              )}
+
+              {!loading && !error && query && results.length === 0 && (
                 <p className="px-5 py-4 text-sm text-neutral-500">
                   No results. Try “scorecard”, “outreach”, “pricing”, or “AI”.
                 </p>
               )}
 
-              {!query && (
+              {!query && !loading && !error && (
                 <p className="px-5 py-4 text-sm text-neutral-500">
                   Search the handbook. Try “candidate assessment” or “client process”.
                 </p>
               )}
 
-              {results.map((result) => (
+              {results.map((result, index) => (
                 <a
-                  key={result.url}
+                  key={result.url ?? `${result.meta?.title ?? 'result'}-${index}`}
                   href={result.url}
                   onClick={() => setOpen(false)}
                   className="block border-b border-neutral-100 px-5 py-4 last:border-0 hover:bg-neutral-50"
