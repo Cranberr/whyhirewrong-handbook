@@ -1,0 +1,17 @@
+name: Link check
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check links in Markdown and MDX
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --accept 200,204,429 'src/content/**/*.mdx' README.md
+          fail: false
