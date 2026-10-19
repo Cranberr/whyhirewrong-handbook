@@ -1,0 +1,9 @@
+# Default owner
+*                          @Cranberr
+
+# Handbook content
+/src/content/handbook/     @Cranberr
+
+# Build, CI and deployment
+/.github/                  @Cranberr
+/astro.config.mjs          @Cranberr
