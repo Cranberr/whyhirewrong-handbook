@@ -1,0 +1,10 @@
+---
+const title = Astro.props.title || 'Checklist';
+---
+
+<div class="my-6 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+  <p class="mb-3 text-sm font-bold uppercase tracking-wide text-neutral-700">{title}</p>
+  <div class="space-y-2 text-neutral-800">
+    <slot />
+  </div>
+</div>

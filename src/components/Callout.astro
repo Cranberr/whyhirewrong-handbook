@@ -1,0 +1,13 @@
+---
+const variant = Astro.props.variant || 'info';
+const styles = {
+  info: 'border-blue-500 bg-blue-50 text-blue-950',
+  warning: 'border-amber-500 bg-amber-50 text-amber-950',
+  danger: 'border-red-500 bg-red-50 text-red-950',
+  success: 'border-emerald-500 bg-emerald-50 text-emerald-950',
+};
+---
+
+<div class:list={['my-6 rounded-xl border-l-4 p-4', styles[variant]]}>
+  <slot />
+</div>
