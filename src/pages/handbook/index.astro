@@ -1,49 +1,33 @@
 ---
 import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
 
-const chapters = (await getCollection('handbook')).sort(
-  (a, b) => a.data.order - b.data.order
-);
+const chapters = (await getCollection('handbook')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>WhyHireWrong? Handbook</title>
-    <meta
-      name="description"
-      content="How WhyHireWrong? works: our approach to technology recruitment, candidate assessment, client collaboration, and hiring quality."
-    />
-  </head>
-  <body class="min-h-screen bg-white text-neutral-900">
-    <main class="mx-auto max-w-4xl px-5 py-20">
-      <p class="text-sm font-semibold uppercase tracking-wide text-[var(--whw-accent)]">
-        The WhyHireWrong? Handbook
-      </p>
-      <h1 class="mt-4 text-5xl font-extrabold tracking-tight">
-        How we help companies hire better.
-      </h1>
-      <p class="mt-6 max-w-2xl text-lg text-neutral-600">
-        This handbook explains how WhyHireWrong? works. It covers our principles, services,
-        sourcing and assessment methods, client process, candidate experience, and quality
-        standards.
-      </p>
-
-      <div class="mt-12 divide-y divide-neutral-200 border-y border-neutral-200">
-        {
-          chapters.map((chapter) => (
-            <a
-              href={`/handbook/${chapter.id}/`}
-              class="flex items-baseline justify-between gap-6 py-5 hover:bg-neutral-50"
-            >
-              <span class="text-lg font-semibold">{chapter.data.title}</span>
-              <span class="text-sm text-neutral-500">{chapter.data.description}</span>
-            </a>
-          ))
-        }
-      </div>
-    </main>
-  </body>
-</html>
+<Base
+  title="WhyHireWrong? Handbook: the complete protocol"
+  description="How WhyHireWrong? works: how I run searches, screen and verify candidates, build shortlists, charge, use AI, and represent job seekers through Career Re:Work."
+  url="https://whyhirewrong.com/handbook/"
+>
+  <main id="content" class="home">
+    <p class="kicker">the whyhirewrong? handbook</p>
+    <h1>Hire proof, <span class="gt">not promises.</span></h1>
+    <p class="lede">
+      This is the complete WhyHireWrong? protocol, written by me, Hubert Warszta. It covers how I run a search,
+      how I screen and verify people, what goes into a shortlist, what's included, how I charge, how I use AI,
+      and how Career Re:Work represents job seekers. It's the same thing I tell clients and candidates, written down.
+    </p>
+    <ol class="toc-list">
+      {chapters.map((c) => (
+        <li>
+          <a href={`/handbook/${c.id}/`}>
+            <span class="nav-n">{String(c.data.order).padStart(2, '0')}</span>
+            <span class="t">{c.data.title}</span>
+            <span class="d">{c.data.description}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </main>
+</Base>
