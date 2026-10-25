@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://whyhirewrong.com',
-  base: '/handbook',
+  trailingSlash: 'always',
   integrations: [mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
