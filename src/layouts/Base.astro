@@ -1,0 +1,49 @@
+---
+import '../styles/global.css';
+const { title, description, url, editPath } = Astro.props;
+const repo = 'https://github.com/Cranberr/whyhirewrong-handbook';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={url} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="preconnect" href="https://fonts.bunny.net" />
+    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=dm-sans:400,500,600,700&display=swap" />
+    <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  </head>
+  <body>
+    <a href="#content" class="skip">Skip to content</a>
+    <header class="top">
+      <div class="top-in">
+        <a href="/handbook/" class="brand">WhyHireWrong<span class="q">?</span> <span class="brand-s">Handbook</span></a>
+        <div id="search" class="search"></div>
+        <div class="top-r">
+          {editPath && <a class="pill" href={`${repo}/blob/main/${editPath}`}>Edit on GitHub</a>}
+          <a class="pill pill--g" href="https://whyhirewrong.com/">whyhirewrong.com</a>
+        </div>
+      </div>
+    </header>
+    <slot />
+    <footer class="foot">
+      <p>WhyHireWrong? · <a href="mailto:hubert@whyhirewrong.com">hubert@whyhirewrong.com</a> · <a href={repo}>Source on GitHub</a> · MIT licensed</p>
+    </footer>
+    <script is:inline src="/pagefind/pagefind-ui.js"></script>
+    <script is:inline>
+      window.addEventListener('DOMContentLoaded', function () {
+        if (window.PagefindUI) {
+          new PagefindUI({ element: '#search', showSubResults: true, showImages: false, resetStyles: false });
+        }
+      });
+    </script>
+  </body>
+</html>
