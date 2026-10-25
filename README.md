@@ -1,134 +1,55 @@
 # WhyHireWrong? Handbook
 
-A complete, shareable company handbook for **WhyHireWrong?** built with Astro, MDX, Tailwind CSS, and Pagefind.
+**Hire proof, not promises.** The complete WhyHireWrong? protocol, written down and open for anyone to read.
 
-It explains how WhyHireWrong? works: our principles, services, sourcing and assessment methods, client and candidate processes, pricing approach, AI boundaries, and quality standards.
+I'm Hubert Warszta. I've been hiring engineers, product people and designers since 2012. This handbook is how I work, in the same words I use with clients and candidates on [whyhirewrong.com](https://whyhirewrong.com/).
 
-## Live handbook
+## What's inside
 
-After deployment, the handbook will be available at:
+| # | Chapter |
+|---|---|
+| 01 | [Why WhyHireWrong? exists](src/content/handbook/01-why-whyhirewrong-exists.mdx) |
+| 02 | [How I work](src/content/handbook/02-how-i-work.mdx) |
+| 03 | [Two ways to work with me](src/content/handbook/03-services.mdx) |
+| 04 | [The company search protocol](src/content/handbook/04-company-search-protocol.mdx) |
+| 05 | [Screening and verification](src/content/handbook/05-screening-and-verification.mdx) |
+| 06 | [The shortlist](src/content/handbook/06-the-shortlist.mdx) |
+| 07 | [Included in every search](src/content/handbook/07-included-in-every-search.mdx) |
+| 08 | [Candidate experience](src/content/handbook/08-candidate-experience.mdx) |
+| 09 | [Career Re:Work](src/content/handbook/09-career-rework.mdx) |
+| 10 | [Terms and fees](src/content/handbook/10-terms-and-fees.mdx) |
+| 11 | [Tools and AI](src/content/handbook/11-tools-and-ai.mdx) |
+| 12 | [What the data says](src/content/handbook/12-what-the-data-says.mdx) |
+| 13 | [FAQ for companies](src/content/handbook/13-faq-companies.mdx) |
+| 14 | [FAQ for job seekers](src/content/handbook/14-faq-job-seekers.mdx) |
+| 15 | [Work with me](src/content/handbook/15-contact.mdx) |
+| 16 | [Change log](src/content/handbook/16-change-log.mdx) |
 
-```text
-https://whyhirewrong.com/handbook/
-```
+Every chapter reads fine right here on GitHub. You don't need to build anything to share it.
 
-## Quick start
+## Run it locally
 
 ```bash
 git clone https://github.com/Cranberr/whyhirewrong-handbook.git
 cd whyhirewrong-handbook
 npm install
-npm run dev
-```
-
-Open:
-
-```text
-http://localhost:4321/handbook/
-```
-
-## Build and search
-
-```bash
 npm run build
 npm run preview
 ```
 
-The build command also generates the Pagefind search index.
-
-## Add a chapter
-
-Create a file in:
-
-```text
-src/content/handbook/
-```
-
-Example:
-
-```mdx
----
-title: New chapter
-description: One-sentence summary.
-order: 18
-updated: 2026-10-19
----
-
-## Section
-
-Your content.
-```
-
-## Reusable components
-
-### Callout
-
-```mdx
-import Callout from '../../components/Callout.astro';
-
-<Callout variant="warning">
-
-Do not share candidate data without consent.
-
-</Callout>
-```
-
-### Checklist
-
-```mdx
-import Checklist from '../../components/Checklist.astro';
-
-<Checklist title="Before a shortlist">
-
-- Scorecard completed
-- Evidence recorded
-- Motivation confirmed
-- Availability confirmed
-
-</Checklist>
-```
-
-### Template
-
-```mdx
-import Template from '../../components/Template.astro';
-
-<Template title="Client intake brief">
-
-Add the template content here.
-
-</Template>
-```
+Then open `http://localhost:4321/handbook/`. Search works after `npm run build`, because that's when Pagefind builds the index.
 
 ## Deploy
 
-### Vercel
+The repo includes `vercel.json` and `netlify.toml`. Import it into Vercel or Netlify and deploy, no extra settings needed. The handbook lives under `/handbook/`, and the root redirects there.
 
-1. Import the GitHub repository into Vercel.
-2. Use the included `vercel.json` configuration.
-3. Deploy.
+## Built with
 
-### Netlify
+Astro, MDX, Tailwind CSS and Pagefind.
 
-1. Connect the repository to Netlify.
-2. Use the included `netlify.toml` configuration.
-3. Deploy.
+## Contact
 
-Recommended production URL:
-
-```text
-https://whyhirewrong.com/handbook/
-```
-
-## Make it public
-
-This repository is currently private. To share it publicly:
-
-1. Open **Settings**.
-2. Go to **General**.
-3. Find **Danger Zone**.
-4. Select **Change visibility**.
-5. Choose **Public** and confirm.
+[hubert@whyhirewrong.com](mailto:hubert@whyhirewrong.com) · [Book a video meeting](https://cal.com/hubert-warszta/general-call) · [LinkedIn](https://www.linkedin.com/in/hwarszta/)
 
 ## License
 
