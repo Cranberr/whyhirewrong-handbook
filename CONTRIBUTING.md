@@ -1,51 +1,28 @@
-# Contributing to the WhyHireWrong? Handbook
+# Contributing
 
-This handbook explains how WhyHireWrong? works. Changes should make the handbook more accurate, useful, and actionable.
+This handbook describes how I actually work. It isn't a template, so every change has to match what happens in real searches and on [whyhirewrong.com](https://whyhirewrong.com/).
 
-## Before changing a page
+If you spot something unclear, wrong or out of date, open an issue or a pull request.
 
-Ask:
+## Rules for any change
 
-1. Does this reflect what we actually do?
-2. Can someone act correctly after reading it?
-3. Is it specific enough to be useful?
-4. Does it protect client and candidate confidentiality?
-5. Does it avoid unsupported claims?
+1. It has to be true today. No aspirational processes.
+2. Written in first person singular, "I". WhyHireWrong? is one person.
+3. No fee percentages or guarantee periods. Those are agreed per engagement, in writing.
+4. No candidate or client details that could identify anyone.
+5. Plain language, normal sentence case, short and specific.
 
-## Adding a chapter
+## Adding or editing a chapter
 
-Create a new `.mdx` file in:
-
-```text
-src/content/handbook/
-```
-
-Use this frontmatter:
+Chapters live in `src/content/handbook/` as `.mdx` files with this frontmatter:
 
 ```mdx
 ---
-title: Your chapter title
-description: One clear sentence explaining the chapter.
-order: 18
-updated: 2026-10-19
+title: Chapter title
+description: One sentence on what the chapter covers.
+order: 17
+updated: 2026-10-25
 ---
 ```
 
-## Writing rules
-
-- Use short sentences.
-- Use active voice.
-- Replace vague claims with examples, thresholds, or checklists.
-- State the owner, process, tools, and exceptions.
-- Update the `updated` field.
-- Add material changes to the change log.
-
-## Commit messages
-
-Use clear messages such as:
-
-```text
-Add candidate scorecard template
-Clarify client response-time expectations
-Update pricing engagement models
-```
+Update the `updated` date and add a line to the change log for anything material.
