@@ -1,115 +1,54 @@
 ---
 import { getCollection, render } from 'astro:content';
-import HandbookSearch from '../../components/HandbookSearch.jsx';
-import '../../styles/global.css';
+import Base from './Base.astro';
 
 const { handbook } = Astro.props;
-const { Content } = await render(handbook);
+const { Content, headings } = await render(handbook);
 
-const chapters = (await getCollection('handbook')).sort(
-  (a, b) => a.data.order - b.data.order
-);
-
-const currentIndex = chapters.findIndex((chapter) => chapter.id === handbook.id);
-const previous = chapters[currentIndex - 1];
-const next = chapters[currentIndex + 1];
+const chapters = (await getCollection('handbook')).sort((a, b) => a.data.order - b.data.order);
+const i = chapters.findIndex((c) => c.id === handbook.id);
+const previous = chapters[i - 1];
+const next = chapters[i + 1];
+const toc = headings.filter((h) => h.depth === 2);
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{handbook.data.title} | WhyHireWrong? Handbook</title>
-    <meta name="description" content={handbook.data.description} />
-    <meta property="og:title" content={handbook.data.title} />
-    <meta property="og:description" content={handbook.data.description} />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content={`https://whyhirewrong.com/handbook/${handbook.id}/`} />
-    <meta name="twitter:card" content="summary_large_image" />
-  </head>
-  <body class="min-h-screen bg-white">
-    <a
-      href="#handbook-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-neutral-900 focus:px-4 focus:py-2 focus:text-white"
-    >
-      Skip to content
-    </a>
-
-    <header class="sticky top-0 z-20 border-b border-neutral-200 bg-white/90 backdrop-blur">
-      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
-        <a href="/handbook/" class="text-lg font-extrabold tracking-tight">
-          WhyHireWrong<span class="text-[var(--whw-accent)]">?</span>
-          <span class="ml-2 text-sm font-medium text-neutral-500">Handbook</span>
-        </a>
-
-        <div class="flex items-center gap-3">
-          <HandbookSearch />
-          <a
-            href="https://github.com/Cranberr/whyhirewrong-handbook"
-            class="hidden rounded-full border border-neutral-300 px-4 py-2 text-sm font-semibold hover:border-neutral-900 sm:block"
-          >
-            Edit on GitHub
+<Base
+  title={`${handbook.data.title} | WhyHireWrong? Handbook`}
+  description={handbook.data.description}
+  url={`https://whyhirewrong.com/handbook/${handbook.id}/`}
+  editPath={`src/content/handbook/${handbook.id}.mdx`}
+>
+  <div class="grid">
+    <aside class="side">
+      <nav aria-label="Handbook chapters">
+        {chapters.map((c) => (
+          <a href={`/handbook/${c.id}/`} class:list={['nav-a', { on: c.id === handbook.id }]} aria-current={c.id === handbook.id ? 'page' : undefined}>
+            <span class="nav-n">{String(c.data.order).padStart(2, '0')}</span>{c.data.title}
           </a>
-        </div>
+        ))}
+      </nav>
+    </aside>
+
+    <main id="content">
+      <article class="prose" data-pagefind-body>
+        <p class="kicker">chapter {String(handbook.data.order).padStart(2, '0')}</p>
+        <h1>{handbook.data.title}</h1>
+        <p class="lede">{handbook.data.description}</p>
+        <Content />
+      </article>
+
+      <div class="pn">
+        {previous ? <a href={`/handbook/${previous.id}/`}>← {previous.data.title}</a> : <span />}
+        {next ? <a href={`/handbook/${next.id}/`}>{next.data.title} →</a> : <span />}
       </div>
-    </header>
+      <p class="meta">Last updated {handbook.data.updated.toLocaleDateString('en-GB')} · Owner: {handbook.data.owner}</p>
+    </main>
 
-    <div class="mx-auto grid max-w-6xl gap-10 px-5 py-10 lg:grid-cols-[260px_minmax(0,1fr)]">
-      <aside class="hidden lg:block">
-        <nav class="sticky top-24 space-y-1" aria-label="Handbook chapters">
-          {
-            chapters.map((chapter) => (
-              <a
-                href={`/handbook/${chapter.id}/`}
-                aria-current={chapter.id === handbook.id ? 'page' : undefined}
-                class:list={[
-                  'block rounded-lg px-3 py-2 text-sm',
-                  chapter.id === handbook.id
-                    ? 'bg-neutral-100 font-semibold text-neutral-900'
-                    : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900',
-                ]}
-              >
-                {chapter.data.title}
-              </a>
-            ))
-          }
-        </nav>
+    {toc.length > 1 && (
+      <aside class="toc">
+        <p class="toc-h">On this page</p>
+        {toc.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}
       </aside>
-
-      <main id="handbook-content" class="prose max-w-none">
-        <article>
-          <h1>{handbook.data.title}</h1>
-          <p class="text-neutral-500">{handbook.data.description}</p>
-          <Content />
-        </article>
-
-        <div class="mt-12 flex justify-between gap-4 border-t border-neutral-200 pt-6 text-sm">
-          {
-            previous ? (
-              <a href={`/handbook/${previous.id}/`} class="font-semibold">
-                ← {previous.data.title}
-              </a>
-            ) : (
-              <span />
-            )
-          }
-          {
-            next ? (
-              <a href={`/handbook/${next.id}/`} class="font-semibold">
-                {next.data.title} →
-              </a>
-            ) : (
-              <span />
-            )
-          }
-        </div>
-
-        <p class="mt-6 text-xs text-neutral-500">
-          Last updated: {handbook.data.updated.toLocaleDateString('en-GB')} · Owner:{' '}
-          {handbook.data.owner}
-        </p>
-      </main>
-    </div>
-  </body>
-</html>
+    )}
+  </div>
+</Base>
